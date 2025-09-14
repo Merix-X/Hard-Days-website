@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Moje hra — soubory a komentáře</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0a0f1a;--card:#111827;--accent:#38bdf8;--muted:#9ca3af;--heading:#f3f4f6;--text:#e5e7eb
+    }
+    body{
+      font-family:'Inter',sans-serif;margin:0;background:linear-gradient(180deg,#0a0f1a 0%,#111827 100%);
+      color:var(--text);background-attachment:fixed;
+    }
+    header{
+      background:url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover;
+      padding:60px 20px;color:#fff;text-align:center;position:relative;overflow:hidden;
+    }
+    header::after{
+      content:'';position:absolute;inset:0;background:rgba(0,0,0,0.6);
+    }
+    header h1,header .meta{position:relative;z-index:1}
+    header h1{margin:0;font-size:2.6rem;font-weight:800}
+    header .meta{margin-top:12px;font-size:1.1rem;color:var(--muted)}
+    .wrap{max-width:1000px;margin:-40px auto 40px;z-index:2;position:relative;padding:0 16px}
+    .card{
+      background:var(--card);padding:24px;border-radius:20px;box-shadow:0 8px 28px rgba(0,0,0,0.6);
+      margin-top:24px;backdrop-filter:blur(8px)
+    }
+    h2{margin-top:0;font-size:1.6rem;color:var(--heading)}
+    .downloads li{margin:12px 0;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02)}
+    a.btn,button.btn{
+      display:inline-block;padding:10px 16px;border-radius:10px;text-decoration:none;background:var(--accent);
+      color:#04202a;font-weight:600;transition:all .2s;cursor:pointer;border:none
+    }
+    a.btn:hover,button.btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(56,189,248,0.4)}
+    form input,form textarea,.admin-panel input{
+      width:100%;padding:10px;margin-top:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.05);color:inherit;font-size:1rem
+    }
+    .flex-between{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+    .meta{color:var(--muted);font-size:0.95rem}
+    .comments{margin-top:16px}
+    .comment{border-top:1px solid rgba(255,255,255,0.08);padding:12px 0}
+    .admin-panel{margin-top:12px}
+    .small{font-size:0.9rem;color:var(--muted)}
+    .danger{background:transparent;border:1px solid rgba(255,80,80,0.3);color:#ffb3b3;padding:8px 12px;border-radius:10px;cursor:pointer}
+    footer{
+      text-align:center;margin-top:40px;color:var(--muted);padding:20px;font-size:0.9rem
+    }
+    .hero-img{
+      width:100%;border-radius:20px;margin-top:20px;box-shadow:0 6px 20px rgba(0,0,0,0.5)
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Moje hra — soubory &amp; komentáře</h1>
+    <div class="meta">Oficiální stránka s buildy, novinkami a komunitní zpětnou vazbou</div>
+  </header>
+
+  <div class="wrap">
+    <section class="card" id="about">
+      <h2>O projektu</h2>
+      <p class="small">Popiš tady krátce hru — co to je, jak hrát, a jaké verze jsou dostupné. Tento soubor je jednopage HTML, které si můžeš nahodit třeba na GitHub Pages nebo na vlastní web.</p>
+      <img class="hero-img" src="https://images.unsplash.com/photo-1605902711622-cfb43c4437d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Ukázka hry">
+    </section>
+
+    <section class="card" id="downloads">
+      <div class="flex-between">
+        <h2>Ke stažení</h2>
+        <div class="small">Klikni na název souboru pro stažení</div>
+      </div>
+      <ul class="downloads" id="downloadsList"></ul>
+    </section>
+
+    <section class="card" id="comments">
+      <h2>Komentáře</h2>
+      <form id="commentForm">
+        <input id="cName" placeholder="Jméno (nepovinné)" />
+        <textarea id="cText" rows="3" placeholder="Napiš komentář..."></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button type="submit" class="btn">Odeslat</button>
+          <button type="button" id="clearComments" class="danger">Smazat všechny (admin)</button>
+        </div>
+      </form>
+      <div class="comments" id="commentsList"></div>
+    </section>
+
+    <section class="card admin-panel" id="adminPanel" style="display:none">
+      <h2>Admin — správa souborů</h2>
+      <form id="addDownloadForm">
+        <input id="dTitle" placeholder="Název souboru (např. Build v0.9)" required />
+        <input id="dUrl" placeholder="Přímý URL ke stažení (nebo GitHub/GDrive link)" required />
+        <textarea id="dDesc" rows="2" placeholder="Krátký popis (volitelné)"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn" type="submit">Přidat</button>
+          <button type="button" id="exportData">Exportuj JSON</button>
+        </div>
+      </form>
+      <div style="margin-top:12px">
+        <h3>Existující soubory</h3>
+        <ul id="adminFiles"></ul>
+      </div>
+    </section>
+
+    <footer>
+      Vytvořeno rychle — doporučeno hostovat na GitHub Pages / Netlify. (Bez serverového backendu.)
+      <br><button id="adminToggle" class="btn" style="margin-top:12px">Přihlásit jako admin</button>
+    </footer>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = 'admin123';
+    const STORAGE_KEYS = {downloads:'game_downloads_v1', comments:'game_comments_v1'};
+
+    function loadDownloads(){try{return JSON.parse(localStorage.getItem(STORAGE_KEYS.downloads)||'[]')}catch(e){return[]}}
+    function saveDownloads(arr){localStorage.setItem(STORAGE_KEYS.downloads,JSON.stringify(arr))}
+    function loadComments(){try{return JSON.parse(localStorage.getItem(STORAGE_KEYS.comments)||'[]')}catch(e){return[]}}
+    function saveComments(arr){localStorage.setItem(STORAGE_KEYS.comments,JSON.stringify(arr))}
+
+    function renderDownloads(){
+      const ul=document.getElementById('downloadsList');ul.innerHTML='';const arr=loadDownloads();
+      if(arr.length===0){ul.innerHTML='<li class="small">Žádné soubory zatím. Admin: přidej buildy v admin sekci.</li>';return}
+      arr.forEach(d=>{
+        const li=document.createElement('li');
+        li.innerHTML=`<strong><a href="${escapeHtmlAttr(d.url)}" download>${escapeHtml(d.title)}</a></strong><div class="small">${escapeHtml(d.desc||'')}</div>`;
+        ul.appendChild(li)
+      })
+    }
+
+    function renderAdminFiles(){
+      const ul=document.getElementById('adminFiles');ul.innerHTML='';
+      loadDownloads().forEach((d,idx)=>{
+        const li=document.createElement('li');
+        li.innerHTML=`${escapeHtml(d.title)} — <button data-idx="${idx}" class="small" onclick="deleteFile(${idx})">Smazat</button>`;
+        ul.appendChild(li)
+      })
+    }
+
+    function renderComments(){
+      const box=document.getElementById('commentsList');box.innerHTML='';const arr=loadComments();
+      if(arr.length===0){box.innerHTML='<div class="small">Zatím žádné komentáře — buď první!</div>';return}
+      arr.slice().reverse().forEach(c=>{
+        const div=document.createElement('div');div.className='comment';
+        div.innerHTML=`<div style="font-weight:600">${escapeHtml(c.name||'Anonym')}</div><div class="small">${new Date(c.t).toLocaleString()}</div><div style="margin-top:6px">${escapeHtml(c.text)}</div>`;
+        box.appendChild(div)
+      })
+    }
+
+    document.getElementById('commentForm').addEventListener('submit',e=>{
+      e.preventDefault();const name=document.getElementById('cName').value.trim();
+      const text=document.getElementById('cText').value.trim();if(!text)return alert('Komentář nesmí být prázdný');
+      const arr=loadComments();arr.push({name,text,t:Date.now()});saveComments(arr);renderComments();document.getElementById('cText').value=''
+    });
+
+    document.getElementById('clearComments').addEventListener('click',()=>{
+      if(!confirm('Smazat všechny komentáře? (admin)'))return;
+      if(!askAdmin())return alert('Špatné heslo');
+      saveComments([]);renderComments();alert('Komentáře smazány')
+    });
+
+    document.getElementById('addDownloadForm').addEventListener('submit',e=>{
+      e.preventDefault();const title=document.getElementById('dTitle').value.trim();
+      const url=document.getElementById('dUrl').value.trim();const desc=document.getElementById('dDesc').value.trim();
+      if(!title||!url)return alert('Vyplň název i URL');
+      const arr=loadDownloads();arr.push({title,url,desc,added:Date.now()});saveDownloads(arr);
+      renderDownloads();renderAdminFiles();e.target.reset()
+    });
+
+    document.getElementById('exportData').addEventListener('click',()=>{
+      const data={downloads:loadDownloads(),comments:loadComments()};
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='game_data_export.json';a.click();URL.revokeObjectURL(url)
+    });
+
+    window.deleteFile=function(idx){if(!askAdmin())return alert('Špatné heslo');const arr=loadDownloads();arr.splice(idx,1);saveDownloads(arr);renderDownloads();renderAdminFiles()}
+
+    document.getElementById('adminToggle').addEventListener('click',()=>{
+      const panel=document.getElementById('adminPanel');
+      if(panel.style.display==='none'){if(!askAdmin())return;panel.style.display='block';document.getElementById('adminToggle').textContent='Odhlásit admin'}
+      else{panel.style.display='none';document.getElementById('adminToggle').textContent='Přihlásit jako admin'}
+    });
+
+    function askAdmin(){const p=prompt('Zadej admin heslo:');return p===ADMIN_PASSWORD}
+
+    function escapeHtml(str){if(!str)return'';return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;')}
+    function escapeHtmlAttr(str){return escapeHtml(str).replace(/'/g,"&#39;")}
+
+    (function init(){
+      if(loadDownloads().length===0){saveDownloads([{title:'Build v0.1 (Windows)',url:'https://example.com/your-game-build-v0.1.zip',desc:'První veřejný build, testovací'}])}
+      if(loadComments().length===0){saveComments([{name:'Tester',text:'Super nápad! Hra funguje dobře na mém PC.',t:Date.now()-3600000}])}
+      renderDownloads();renderComments();renderAdminFiles()
+    })();
+  </script>
+</body>
+</html>
