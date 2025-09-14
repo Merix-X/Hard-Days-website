@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="cs">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Moje hra — soubory a komentáře</title>
+  <title>Hardlife - Files and Comments</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -56,58 +56,58 @@
 </head>
 <body>
   <header>
-    <h1>Moje hra — soubory &amp; komentáře</h1>
-    <div class="meta">Oficiální stránka s buildy, novinkami a komunitní zpětnou vazbou</div>
+    <h1>Hardlife - Files &amp; Comments</h1>
+    <div class="meta">Official site with builds, news, and community feedback</div>
   </header>
 
   <div class="wrap">
     <section class="card" id="about">
-      <h2>O projektu</h2>
-      <p class="small">Popiš tady krátce hru — co to je, jak hrát, a jaké verze jsou dostupné. Tento soubor je jednopage HTML, které si můžeš nahodit třeba na GitHub Pages nebo na vlastní web.</p>
-      <img class="hero-img" src="https://images.unsplash.com/photo-1605902711622-cfb43c4437d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Ukázka hry">
+      <h2>About the Project</h2>
+      <p class="small">Hardlife description.</p>
+      <img class="hero-img" src="https://images.unsplash.com/photo-1605902711622-cfb43c4437d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Game preview">
     </section>
 
     <section class="card" id="downloads">
       <div class="flex-between">
-        <h2>Ke stažení</h2>
-        <div class="small">Klikni na název souboru pro stažení</div>
+        <h2>Download</h2>
+        <div class="small">Click on the file name to download</div>
       </div>
       <ul class="downloads" id="downloadsList"></ul>
     </section>
 
     <section class="card" id="comments">
-      <h2>Komentáře</h2>
+      <h2>Comments</h2>
       <form id="commentForm">
-        <input id="cName" placeholder="Jméno (nepovinné)" />
-        <textarea id="cText" rows="3" placeholder="Napiš komentář..."></textarea>
+        <input id="cName" placeholder="Name (optional)" />
+        <textarea id="cText" rows="3" placeholder="Write a comment..."></textarea>
         <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-          <button type="submit" class="btn">Odeslat</button>
-          <button type="button" id="clearComments" class="danger">Smazat všechny (admin)</button>
+          <button type="submit" class="btn">Send</button>
+          <button type="button" id="clearComments" class="danger">Delete all (admin)</button>
         </div>
       </form>
       <div class="comments" id="commentsList"></div>
     </section>
 
     <section class="card admin-panel" id="adminPanel" style="display:none">
-      <h2>Admin — správa souborů</h2>
+      <h2>Admin — File Management</h2>
       <form id="addDownloadForm">
-        <input id="dTitle" placeholder="Název souboru (např. Build v0.9)" required />
-        <input id="dUrl" placeholder="Přímý URL ke stažení (nebo GitHub/GDrive link)" required />
-        <textarea id="dDesc" rows="2" placeholder="Krátký popis (volitelné)"></textarea>
+        <input id="dTitle" placeholder="File name (e.g., Build v0.9)" required />
+        <input id="dUrl" placeholder="Direct download URL (or GitHub/GDrive link)" required />
+        <textarea id="dDesc" rows="2" placeholder="Short description (optional)"></textarea>
         <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-          <button class="btn" type="submit">Přidat</button>
-          <button type="button" id="exportData">Exportuj JSON</button>
+          <button class="btn" type="submit">Add</button>
+          <button type="button" id="exportData">Export JSON</button>
         </div>
       </form>
       <div style="margin-top:12px">
-        <h3>Existující soubory</h3>
+        <h3>Existing files</h3>
         <ul id="adminFiles"></ul>
       </div>
     </section>
 
     <footer>
-      Vytvořeno rychle — doporučeno hostovat na GitHub Pages / Netlify. (Bez serverového backendu.)
-      <br><button id="adminToggle" class="btn" style="margin-top:12px">Přihlásit jako admin</button>
+      Quickly made — recommended to host on GitHub Pages / Netlify. (No server backend.)
+      <br><button id="adminToggle" class="btn" style="margin-top:12px">Log in as admin</button>
     </footer>
   </div>
 
@@ -122,7 +122,7 @@
 
     function renderDownloads(){
       const ul=document.getElementById('downloadsList');ul.innerHTML='';const arr=loadDownloads();
-      if(arr.length===0){ul.innerHTML='<li class="small">Žádné soubory zatím. Admin: přidej buildy v admin sekci.</li>';return}
+      if(arr.length===0){ul.innerHTML='<li class="small">No files yet. Admin: add builds in the admin section.</li>';return}
       arr.forEach(d=>{
         const li=document.createElement('li');
         li.innerHTML=`<strong><a href="${escapeHtmlAttr(d.url)}" download>${escapeHtml(d.title)}</a></strong><div class="small">${escapeHtml(d.desc||'')}</div>`;
@@ -134,37 +134,37 @@
       const ul=document.getElementById('adminFiles');ul.innerHTML='';
       loadDownloads().forEach((d,idx)=>{
         const li=document.createElement('li');
-        li.innerHTML=`${escapeHtml(d.title)} — <button data-idx="${idx}" class="small" onclick="deleteFile(${idx})">Smazat</button>`;
+        li.innerHTML=`${escapeHtml(d.title)} — <button data-idx="${idx}" class="small" onclick="deleteFile(${idx})">Delete</button>`;
         ul.appendChild(li)
       })
     }
 
     function renderComments(){
       const box=document.getElementById('commentsList');box.innerHTML='';const arr=loadComments();
-      if(arr.length===0){box.innerHTML='<div class="small">Zatím žádné komentáře — buď první!</div>';return}
+      if(arr.length===0){box.innerHTML='<div class="small">No comments yet — be the first!</div>';return}
       arr.slice().reverse().forEach(c=>{
         const div=document.createElement('div');div.className='comment';
-        div.innerHTML=`<div style="font-weight:600">${escapeHtml(c.name||'Anonym')}</div><div class="small">${new Date(c.t).toLocaleString()}</div><div style="margin-top:6px">${escapeHtml(c.text)}</div>`;
+        div.innerHTML=`<div style="font-weight:600">${escapeHtml(c.name||'Anonymous')}</div><div class="small">${new Date(c.t).toLocaleString()}</div><div style="margin-top:6px">${escapeHtml(c.text)}</div>`;
         box.appendChild(div)
       })
     }
 
     document.getElementById('commentForm').addEventListener('submit',e=>{
       e.preventDefault();const name=document.getElementById('cName').value.trim();
-      const text=document.getElementById('cText').value.trim();if(!text)return alert('Komentář nesmí být prázdný');
+      const text=document.getElementById('cText').value.trim();if(!text)return alert('Comment cannot be empty');
       const arr=loadComments();arr.push({name,text,t:Date.now()});saveComments(arr);renderComments();document.getElementById('cText').value=''
     });
 
     document.getElementById('clearComments').addEventListener('click',()=>{
-      if(!confirm('Smazat všechny komentáře? (admin)'))return;
-      if(!askAdmin())return alert('Špatné heslo');
-      saveComments([]);renderComments();alert('Komentáře smazány')
+      if(!confirm('Delete all comments? (admin)'))return;
+      if(!askAdmin())return alert('Wrong password');
+      saveComments([]);renderComments();alert('Comments deleted')
     });
 
     document.getElementById('addDownloadForm').addEventListener('submit',e=>{
       e.preventDefault();const title=document.getElementById('dTitle').value.trim();
       const url=document.getElementById('dUrl').value.trim();const desc=document.getElementById('dDesc').value.trim();
-      if(!title||!url)return alert('Vyplň název i URL');
+      if(!title||!url)return alert('Fill in both title and URL');
       const arr=loadDownloads();arr.push({title,url,desc,added:Date.now()});saveDownloads(arr);
       renderDownloads();renderAdminFiles();e.target.reset()
     });
@@ -176,22 +176,22 @@
       const a=document.createElement('a');a.href=url;a.download='game_data_export.json';a.click();URL.revokeObjectURL(url)
     });
 
-    window.deleteFile=function(idx){if(!askAdmin())return alert('Špatné heslo');const arr=loadDownloads();arr.splice(idx,1);saveDownloads(arr);renderDownloads();renderAdminFiles()}
+    window.deleteFile=function(idx){if(!askAdmin())return alert('Wrong password');const arr=loadDownloads();arr.splice(idx,1);saveDownloads(arr);renderDownloads();renderAdminFiles()}
 
     document.getElementById('adminToggle').addEventListener('click',()=>{
       const panel=document.getElementById('adminPanel');
-      if(panel.style.display==='none'){if(!askAdmin())return;panel.style.display='block';document.getElementById('adminToggle').textContent='Odhlásit admin'}
-      else{panel.style.display='none';document.getElementById('adminToggle').textContent='Přihlásit jako admin'}
+      if(panel.style.display==='none'){if(!askAdmin())return;panel.style.display='block';document.getElementById('adminToggle').textContent='Log out admin'}
+      else{panel.style.display='none';document.getElementById('adminToggle').textContent='Log in as admin'}
     });
 
-    function askAdmin(){const p=prompt('Zadej admin heslo:');return p===ADMIN_PASSWORD}
+    function askAdmin(){const p=prompt('Enter admin password:');return p===ADMIN_PASSWORD}
 
     function escapeHtml(str){if(!str)return'';return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;')}
     function escapeHtmlAttr(str){return escapeHtml(str).replace(/'/g,"&#39;")}
 
     (function init(){
-      if(loadDownloads().length===0){saveDownloads([{title:'Build v0.1 (Windows)',url:'https://example.com/your-game-build-v0.1.zip',desc:'První veřejný build, testovací'}])}
-      if(loadComments().length===0){saveComments([{name:'Tester',text:'Super nápad! Hra funguje dobře na mém PC.',t:Date.now()-3600000}])}
+      if(loadDownloads().length===0){saveDownloads([{title:'Build v0.1 (Windows)',url:'https://example.com/your-game-build-v0.1.zip',desc:'First public build, for testing'}])}
+      if(loadComments().length===0){saveComments([{name:'Tester',text:'Great idea! The game works well on my PC.',t:Date.now()-3600000}])}
       renderDownloads();renderComments();renderAdminFiles()
     })();
   </script>
