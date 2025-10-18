@@ -112,7 +112,7 @@
   </div>
 
   <script>
-    const ADMIN_PASSWORD = 'admin123';
+    const ADMIN_PASSWORD = 'admerix';
     const STORAGE_KEYS = {downloads:'game_downloads_v1', comments:'game_comments_v1'};
 
     function loadDownloads(){try{return JSON.parse(localStorage.getItem(STORAGE_KEYS.downloads)||'[]')}catch(e){return[]}}
@@ -190,8 +190,7 @@
     function escapeHtmlAttr(str){return escapeHtml(str).replace(/'/g,"&#39;")}
 
     (function init(){
-      if(loadDownloads().length===0){saveDownloads([{title:'Build v0.1 (Windows)',url:'https://example.com/your-game-build-v0.1.zip',desc:'First public build, for testing'}])}
-      if(loadComments().length===0){saveComments([{name:'Tester',text:'Great idea! The game works well on my PC.',t:Date.now()-3600000}])}
+      if(loadDownloads().length===0){saveDownloads([{title:'Build indev 0.1 (Windows)',url:'indev-0.1.exe',desc:'First available version. Part of the map added'}])}
       renderDownloads();renderComments();renderAdminFiles()
     })();
   </script>
